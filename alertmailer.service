@@ -1,0 +1,18 @@
+[Unit]
+# Based on rc-local service
+After=network-online.target
+Description=alertmailer
+After=network.target
+ 
+[Service]
+Type=forking
+ExecStart=/usr/local/sbin/alertmailer.py
+TimeoutSec=0
+RemainAfterExit=yes
+GuessMainPID=no
+ 
+# Often contains status messages which users expect to see on the console
+# during boot
+[Service]
+StandardOutput=journal+console
+StandardError=journal+console
