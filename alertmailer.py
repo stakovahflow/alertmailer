@@ -37,7 +37,7 @@ import datetime
 
 # Define our global variables:
 # Timestamp:
-trampstamp = datetime.datetime.now()
+trampstamp = str(datetime.datetime.now())
 
 # Get the local machine's hostname:
 hostname = socket.gethostname()
@@ -48,13 +48,13 @@ mailport = 587
 
 # Sender's email address:
 fromaddr = "<fromuser>@gmail.com"
-fromname = "Sender Name"
+fromname = "<First Last>"
 
 # Sender's password:
 obscurePass = base64.b64decode('<super secret squirrel base64-encoded password>')
 
 # Recipient's email address:
-toaddr = "<touser>@gmail.com"
+toaddr = "<recipient email address>"
 
 # Sleep timer:
 backoff = 10
@@ -97,8 +97,8 @@ def mailer():
 	msg['From'] = fromaddr
 	msg['To'] = toaddr
 	msg['Subject'] = subject
-	body = "Subject: %s" % (subject)
-	body = body + str(trampstamp) + " \n"
+	body = "Subject: %s\n" % (subject)
+	body = body + trampstamp + " \n"
 	body = body + "%s host %s is online\n\n" % (opsys, hostname)
 	body = body + mailSig
 	
