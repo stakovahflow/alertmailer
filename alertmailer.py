@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 #  alertmailer.py
 #  
-#  Copyright 2017 stak <stakovahflow666@gmail.com>
+#  Copyright 2017, 2022 stak <stakovahflow666@gmail.com>
 #  
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,9 +30,8 @@
 #  application to be run at boot.
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-import os, sys, smtplib, socket, platform, urllib2, time, base64
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
+import os, sys, smtplib, socket, platform, urllib, time, base64, ssl
+from email.message import EmailMessage
 import datetime
 
 
@@ -44,38 +43,35 @@ trampstamp = datetime.datetime.now()
 hostname = socket.gethostname()
 
 # Mail server:
-mailserver = 'smtp.gmail.com'
+mailserver = "smtp.gmail.com"
 mailport = 587
 
 # Sender's email address:
-fromaddr = '<from-address>@gmail.com'
-fromname = '<email sender name>'
+fromaddr = "<fromuser>@gmail.com"
+fromname = "Sender Name"
 
 # Sender's password:
 obscurePass = base64.b64decode('<super secret squirrel base64-encoded password>')
-"""
-Note: To obtain the base64-encoded password, run the 
-following commands at the Python CLI:
->>> import base64
->>> base64.b64encode ('yourdrowssap')
-"""
 
 # Recipient's email address:
-toaddr = '<to-address>@gmail.com'
+toaddr = "<touser>@gmail.com"
 
 # Sleep timer:
 backoff = 10
 
 # Unable to reach remote host debug message:
-netdown = 'Nope. D.E.D. Dead. Not yet party time.'
+netdown = "Nope. D.E.D. Dead. Not yet party time."
 
 # Able to reach remote host debug message:
-netup   = 'It\'s live! Time to party!\n'
+netup   = "It's live! Time to party!\n"
+
+#Email Subject:
+subject = hostname + " -- Online\n"
 
 # Email signature:
 mailSig = 'Thanks!\n'
-mailSig = mailSig + '--<signature name>\n'
-mailSig = mailSig + '<from-address>@gmail.com'
+mailSig = mailSig + fromname + '\n'
+mailSig = mailSig + fromaddr
 
 # We're going to reach out to Google anyway, so 
 # that's the predefined variable
@@ -97,42 +93,38 @@ else:
 
 # Our emailer:
 def mailer():
-	msg = MIMEMultipart()
+	msg = EmailMessage()
 	msg['From'] = fromaddr
 	msg['To'] = toaddr
-	msg['Subject'] = hostname + ' -- Online'
-	
-	body = str(trampstamp) + ' \n' 
-	body = body + '%s host %s is online\n\n' % (opsys, hostname)
+	msg['Subject'] = subject
+	body = "Subject: %s" % (subject)
+	body = body + str(trampstamp) + " \n"
+	body = body + "%s host %s is online\n\n" % (opsys, hostname)
 	body = body + mailSig
 	
-	print body
+	print (body)
 	
-	# Plain text email:
-	msg.attach(MIMEText(body,'plain'))
-	# Define server with SMTP server name and port:
 	server = smtplib.SMTP(mailserver, mailport)
 	server.starttls()
 	# Log into SMTP server:
 	server.login(fromaddr, obscurePass)
-	text = msg.as_string()
 	
 	# Time to send the email:
-	server.sendmail(fromaddr, toaddr, text)
+	server.sendmail(fromaddr, toaddr, body)
 	server.quit()
 	
-	print 'done!'
+	print ('done!')
 
 def testconnection():
 	while True:
 		# If there's a response, let's get out of here:
 		response = os.system(pingcmd)
 		if response == 0:
-			print netup
+			print (netup)
 			return
 		# If there's no response, let's keep trying:
 		else:
-			print netdown
+			print (netdown)
 			time.sleep(backoff)
 			pass
 
