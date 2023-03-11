@@ -1,3 +1,5 @@
+Thanks for downloading alertmailer!
+
 Two things:
 
 1. Make sure to change your email address and sender name.
