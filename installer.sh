@@ -1,4 +1,5 @@
 #!/bin/bash
+# May need to update paths, depending on OS flavors
 SYSTEMCTLCMD="/usr/bin/systemctl"
 DESTINATION="/usr/local/sbin/"
 TEMPLATE="alertmailer.py-template"
