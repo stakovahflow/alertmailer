@@ -3,7 +3,7 @@
 #
 #  alertmailer.py
 #  
-#  Copyright 2017, 2022 stak <stakovahflow666@gmail.com>
+#  Copyright 2017, 2022, 2023 stak <stakovahflow666@gmail.com>
 #  
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -30,34 +30,37 @@
 #  application to be run at boot.
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-import os, sys, smtplib, socket, platform, urllib, time, base64, ssl
+# User-defined parameters:
+# Sender's email address:
+fromaddr = "SENDERADDR"
+fromname = "SENDERNAME"
+# Base64-encoded password (may need to setup an app password)
+password = "BASE64PASSWORD"
+# Recipient's email address:
+toaddr = "RECIPIENT"
+
+# Mail server:
+mailserver = "smtp.gmail.com"
+mailport = 587
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Import our libraries:
+import os, sys, smtplib, socket, platform, time, base64
 from email.message import EmailMessage
 import datetime
 
-
-# Define our global variables:
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Define more global variables:
 # Timestamp:
 trampstamp = str(datetime.datetime.now())
 
 # Get the local machine's hostname:
 hostname = socket.gethostname()
 
-# Mail server:
-mailserver = "smtp.gmail.com"
-mailport = 587
-
-# Sender's email address:
-fromaddr = "SENDERADDR"
-fromname = "SENDERNAME"
-
 # Sender's password:
-password = "BASE64PASSWORD"
 asciiPass = password.encode('ascii')
 decodedPass = base64.b64decode(asciiPass)
 obscurePass = decodedPass.decode('ascii')
-
-# Recipient's email address:
-toaddr = "RECIPIENT"
 
 # Sleep timer:
 backoff = 10
